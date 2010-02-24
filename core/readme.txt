@@ -1,0 +1,1 @@
+This package provides the core OO tools for the library. Adds simple file and directory handling, tools to sanitise external data input, email functionality, UTF8 encoding tools, and a flexible session framework.

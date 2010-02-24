@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nav>
+
+    <link>
+        <alias>dependency-injection</alias>
+        <file>dependency-injection.txt</file>
+        <name>Using Dependency Injection</name>
+        <desc>How to use the power of dependency injection within your code.</desc>
+    </link>
+
+    <link>
+        <alias>environments</alias>
+        <file>bootstrap-and-environments.txt</file>
+        <name>Introducing Environments</name>
+        <desc>To support both HTTP requests and command line execution, the library is usually executed within a code environment.</desc>
+    </link>
+
+    <link>
+        <alias>autoload</alias>
+        <file>autoload.txt</file>
+        <name>(Auto)load Packages</name>
+        <desc>How to autoload or compile library packages so you can start using the library classes available.</desc>
+    </link>
+
+    <link>
+        <alias>error-handling</alias>
+        <file>error-handling.txt</file>
+        <name>Error Handling</name>
+        <desc>Some suggestions on how you can use the library to handle errors and exceptions within your application.</desc>
+    </link>
+
+    <link>
+        <alias>unicode</alias>
+        <file>unicode.txt</file>
+        <name>Working with Unicode Text</name>
+        <desc>How to safely work with unicode text within your application.</desc>
+    </link>
+
+    <link>
+        <alias>filters</alias>
+        <file>filters.txt</file>
+        <name>Using Filters</name>
+        <desc>Introduces the filtering system used prolifically throughout the library to manipulate data.</desc>
+    </link>
+
+    <link>
+        <alias>user-input</alias>
+        <file>user-input.txt</file>
+        <name>Accessing User Input</name>
+        <desc>How to work safely with user inputs via the working environment.</desc>
+    </link>
+
+    <link>
+        <alias>templates-and-helpers</alias>
+        <file>templates.txt</file>
+        <name>Templates &amp; View Helpers</name>
+        <desc>Introducing the internal templating engine and view helpers.</desc>
+    </link>
+
+</nav>

@@ -1,0 +1,41 @@
+/* form fixes */
+
+form
+{
+margin-top: 1.75em;	
+}
+
+legend 
+{
+position: relative;
+left: -7px;
+top: -0.75em;
+}
+
+	legend span { width: 100%; }
+
+fieldset ol 
+{
+padding-top: 0.25em;
+}
+
+fieldset 
+{
+position: relative;
+}
+
+fieldset fieldset legend 
+{
+top: 0;
+}
+
+button
+{
+width:auto;
+overflow:visible;
+}
+
+fieldset fieldset ol li
+{
+padding-bottom: 0;
+}

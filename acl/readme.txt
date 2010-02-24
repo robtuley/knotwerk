@@ -1,0 +1,1 @@
+The ACL (Access Control List) package provides the basis for user administration, HTTP authentication and role-based authorisation. The package provides a skeleton user class and an extensible user gateway system, including a gateway designed for password authentication. Roles can be associated with users, with each role designed as a composite that contains further child roles.

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Specifies Knotwerk Unit Test Settings
+-->
+<unit>
+
+  <!--
+  By default the testing suite assumes that the machine is not net-connected.
+  To enable web-based tests change the enabled attribute to yes.
+  -->
+  <network enabled="no" />
+
+  <!--
+  To include mysql testing specify connection details.
+  -->
+  <mysql>
+    <host></host>
+    <user></user>
+    <password></password>
+    <name></name>
+    <port></port>
+  </mysql>
+
+  <!--
+  To include postgresql testing specify connection details.
+  -->
+  <postgresql>
+    <host></host>
+    <user></user>
+    <password></password>
+    <name></name>
+    <port></port>
+  </postgresql>
+
+  <!--
+  to include Google maps API interface tests add your Google MAP API key.
+  -->
+  <google>
+    <maps></maps>
+  </google>
+
+  <!--
+  if web-testing the documentation site, this section provides details about
+  where it's local URL is, etc.
+  -->
+  <web>
+    <url></url>
+  </web>
+
+</unit>

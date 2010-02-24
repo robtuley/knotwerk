@@ -1,0 +1,25 @@
+/*
+IE6 fixes
+*/
+
+fieldset
+{
+border: none;	
+}
+
+/* No direct child selector (>) support */
+
+.single-fieldset form fieldset
+{
+margin-bottom: 0;
+} 
+
+	.single-fieldset form fieldset legend
+	{
+	display: none;	
+	} 
+	
+	.single-fieldset form fieldset fieldset legend
+	{
+	display: block;	
+	}

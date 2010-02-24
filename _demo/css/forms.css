@@ -1,0 +1,261 @@
+/**
+ * General form styling
+ *
+ * @author Rob Tuley
+ * @version SVN: $Id$
+ */
+
+form
+{
+margin-top: 1em;
+}
+
+fieldset
+{
+margin: 1.5em 0 0 0;
+padding: 0;
+}
+
+	fieldset ol
+	{
+	padding: 1em 1em 0 1em;
+	list-style: none;
+	margin: 0;
+	}
+        fieldset li.repeated > ol, fieldset li.group > ol
+        {
+        padding: 0;
+        }
+
+	fieldset li
+	{
+	padding-bottom: 1em;
+	margin: 0;
+	}
+        fieldset li.repeated
+        {
+        padding-bottom: 0;
+        }
+
+	fieldset.submit, fieldset.hidden
+	{
+	border-style: none;
+	}
+
+legend
+{
+margin-left: 1em;
+font-weight: bold;
+padding: 0 5px;
+}
+
+	/* add fixes to make long legends wrap */
+	legend { white-space: normal; }
+	legend span { display: block; }
+
+input, textarea, select
+{
+font-size: 100%;
+}
+
+form li.repeated a.add
+{
+float: left;
+display:block;
+margin: 0 0 1em 9em;
+}
+
+/* right align text labels (on left of fields) */
+
+label
+{
+float: left;
+width: 8em;
+margin-right: 1em;
+text-align: right;
+}
+
+fieldset
+{
+float: left;
+clear: left;
+width: 100%;
+margin: 0 0 1.5em 0;
+padding: 0;
+border-top: 1px solid #000;
+}
+
+	fieldset li
+	{
+	float: left;
+	clear: left;
+	width: 100%;
+	padding-bottom: 1em;
+	}
+
+	fieldset.even
+	{
+	background-color: #f3f3f3;
+	}
+
+	fieldset.submit
+	{
+	float: none;
+	width: auto;
+	border: 0 none #FFF;
+	padding-left: 10em;
+	background-color: transparent;
+	}
+
+	fieldset.hidden
+	{
+	margin:0;
+	float: none;
+	width: auto;
+	padding: 0;
+	}
+
+textarea, select
+{
+width: 70%;
+}
+
+#primary select
+{
+width: 200px;
+}
+
+/* nested fieldset */
+
+fieldset fieldset
+{
+margin-bottom: -2.25em;
+border-style: none;
+background-color: transparent;
+background-image: none;
+}
+
+	fieldset fieldset legend
+	{
+	margin-left: 0;
+	padding: 0;
+	font-weight: normal;
+	}
+
+	fieldset fieldset ol
+	{
+	position: relative;
+	top: -1.5em;
+	margin: 0 0 0 9em;
+	padding: 0;
+	}
+
+	fieldset fieldset label
+	{
+	float: none;
+	width: auto;
+	margin-right: auto;
+	}
+
+	fieldset fieldset ol li
+	{
+	padding-bottom: 0.2em;
+	}
+
+/* required and error messages */
+
+label em
+{
+display: block;
+color: #ccc;
+font-size: 85%;
+font-style: normal;
+text-transform: uppercase;
+}
+
+legend span em
+{
+color: #ccc;
+font-size: 85%;
+text-transform: uppercase;
+font-weight: normal;
+}
+
+label strong
+{
+display: block;
+color: #c00;
+font-size: 85%;
+font-weight: normal;
+text-transform: uppercase;
+}
+
+fieldset fieldset legend span strong
+{
+color: #c00;
+font-size: 85%;
+font-weight: normal;
+text-transform: uppercase;
+}
+
+/* form buttons */
+
+form fieldset.submit button, form fieldset.submit input.submit
+{
+padding: 0.5em 1em;
+font-size: 100%;
+}
+
+/* help text */
+
+form span.help
+{
+display: block;
+margin-left: 10em;
+font-size: 90%;
+color: #999;
+}
+
+/*
+Form error summary
+*/
+
+div.error
+{
+border-top: 1px solid #c00;
+border-bottom: 1px solid #c00;
+border-right: 10px solid #c00;
+padding: 0 1em 0 2em;
+margin-bottom: 0.5em;
+background: url('../img/icon/warning.gif') 0.5em 0.5em no-repeat;
+}
+
+	div.error p
+	{
+  	font-weight: bold;
+	}
+
+	div.error ul
+	{
+	margin: 0.5em;
+	margin-left: 2em;
+	}
+
+	div.error ul li
+	{
+	list-style: square outside;
+	}
+
+/*
+Long nested fieldset labels need special treatment
+*/
+
+.long-label fieldset fieldset
+{
+margin-bottom: -0.25em;
+}
+
+.long-label fieldset fieldset ol
+{
+top: 0.5em;
+}

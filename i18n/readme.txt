@@ -1,0 +1,1 @@
+The incubator package to provide full i18n support. Currently provides address and country reference, but will be extended for full multi-lingual and locale support.

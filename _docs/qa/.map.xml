@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nav>
+
+    <link>
+        <alias>running-tests</alias>
+        <file>running-tests.txt</file>
+        <name>Running the Unit Tests</name>
+        <desc>How to run the existing unit tests to check the compatibility of the library on your system.</desc>
+    </link>
+
+    <link>
+        <alias>writing-tests</alias>
+        <file>writing-tests.txt</file>
+        <name>Writing Your Own Unit Tests</name>
+        <desc>How to write your own unit tests to cover your application.</desc>
+    </link>
+
+    <link>
+        <alias>smoke-tests</alias>
+        <file>smoke-tests.txt</file>
+        <name>Smoke Tests</name>
+        <desc>Building an early warning system for identifying "smoke" -- a sniff of a deeper problem.</desc>
+    </link>
+
+    <link>
+        <alias>monitoring</alias>
+        <file>monitoring.txt</file>
+        <name>Monitoring Your Application</name>
+        <desc>A brief description of some ways to monitor your own application.</desc>
+    </link>
+
+</nav>

@@ -1,0 +1,52 @@
+== Accessing User Input ==
+
+User input is normally handled in PHP scripts using the $_GET, $POST, $_COOKIE, etc superglobals. Once the library is bootstrapped, these superglobals remain unaffected and can be manipulated as normal. If you choose to use the library [/how-to/environments code environments], an alternative route to access user input is also available.
+
+=== GET and POST Variables ===
+
+The GET and POST data is available through the environment input() method as caged arrays (see [/ref/core/T_Cage_Array T_Cage_Array]). When retrieving array keys the interface forces the user to specify what you are expecting (a scalar or array), and provides an optional filter method to validate the input.
+
+<?php
+$env = new T_Environment_Http;
+
+$page = 1;
+// either ...
+if (isset($_GET['page'])) $page = (int) $_GET['page'];
+// ... or ...
+if ($env->input('GET')->exists('page')) {
+    try {
+        $page = $env->input('GET')
+                        ->asScalar('page')
+                        ->filter(new T_Validate_Int)
+                        ->uncage();
+    } catch (Exception $e) { $page = 1; }
+}
+?>
+
+In the example above, the 'page' GET variable is validated as a scalar integer. If it is an array or not an integer an exception will be thrown. In most cases this can be left to bubble up to the global error handler, or it can be explicitally handled with a try-catch block. The example above is trivial and the normal $_GET code is shorter and cleaner (although note it is not entirely safe, an error will occur if the input is an array). However, once things become more complicated the cage interface actually helps:
+
+<?php
+$choices = array();  // expect array of integers via POST
+                     // e.g. $choices = $_POST['choices'];
+if ($env->input('POST')->exists('choices')) {
+    $f = new T_Filter_ArrayMap(new T_Validate_Int);
+    $choices = $env->input('POST')
+                       ->asArray('choice')
+                       ->filter($f)
+                       ->uncage();
+}
+?>
+
+Note that the filter method can be called multiple times to execute multiple filters against the input (these can validate or simply manipulate the data), or the filter method does not need to be called at all. The asArray or asScalar methods are called with the key name as an argument to retrieve that element, and the uncage method is always called finally to retrieve the filtered data from the "cage".
+
+=== Cookies ===
+
+TODO
+
+=== Uploaded Files ===
+
+TODO
+
+=== $_SERVER Variables ===
+
+TODO

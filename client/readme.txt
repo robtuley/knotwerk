@@ -1,0 +1,1 @@
+This package provides client side template code for web applications based on the jQuery library. It is currently in the 'germination' stage, and is not yet stable.

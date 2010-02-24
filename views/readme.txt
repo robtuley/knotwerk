@@ -1,0 +1,1 @@
+Provides various view tools: a simple templating engine, URL navigation renderers and file views.

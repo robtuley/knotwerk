@@ -1,0 +1,1 @@
+Adds input unit testing capibilities to the code without external dependencies on PHPUnit or Simpletest. Support for test suites, variety of common assertions and code coverage analysis.

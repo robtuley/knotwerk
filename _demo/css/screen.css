@@ -1,0 +1,162 @@
+/*
+Styling for Knotwerk examples
+@author Rob Tuley
+@version SVN: $Id$
+*/
+
+/*
+Layout
+*/
+
+body
+{
+width: 60em;
+margin: 0 auto;
+}
+
+/*
+Text Styling
+*/
+
+body, button, textarea, input.submit
+{
+line-height: 1.25;
+font-size: 100%;
+font-family: Arial,Helvetica,sans-serif;
+}
+
+a:link,a:active,a:visited
+{
+color: #999;
+text-decoration: underline;
+}
+
+a:hover,a:focus
+{
+background-color: #ccc;
+color: #000;
+text-decoration: none;
+}
+
+p, ol, ul
+{
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+}
+
+li
+{
+margin: 0.4em 0;
+}
+
+strong, em
+{
+font-weight: bold;
+}
+
+h1
+{
+font-size: 1.4em;
+margin-top: 1.5em;
+margin-bottom: 1em;
+}
+
+h2
+{
+font-size: 1.25em;
+margin-top: 1.5em;
+margin-bottom: 1em;
+}
+
+/*
+Demo banner
+*/
+
+p.demo
+{
+margin: 0;
+padding: 0.7em;
+width: 100%;
+border: 1px solid #999;
+border-top: none;
+background-color: #ffffe1;
+}
+
+/*
+Tables
+*/
+
+table
+{
+background-color: #fff;
+}
+
+    table.alone
+    {
+    margin-top: 0.5em;
+    }
+
+	table td, table th
+	{
+	padding: 0.4em 10px;
+	}
+
+	table th
+	{
+	font-weight: bold;
+	}
+
+	table tr.first
+	{
+	border-top: 1px solid #dedede;
+	  /* when no thead, first row needs top border */
+	}
+
+	table td
+	{
+	border-left: 1px solid #dedede;
+	border-bottom: 1px solid #dedede;
+	vertical-align: top;
+	}
+
+		table thead td
+		{
+		font-size: 80%;
+		}
+
+		table tfoot td
+		{
+		border: none;
+		}
+
+		table tbody td.first, table thead td.first
+		{
+		border-left: none;
+		}
+
+	table tfoot
+	{
+	text-align: right;
+	}
+
+	table thead th, table tbody tr th
+	{
+	background-color: #dedede;
+	}
+
+		table thead th
+		{
+		vertical-align: middle;
+		}
+
+		table tbody th
+		{
+		vertical-align: top;
+		}
+
+			table tbody tr th.light
+			{
+			background-color: transparent;
+			border-left: 1px solid #dedede;
+			border-bottom: 1px solid #dedede;
+			}

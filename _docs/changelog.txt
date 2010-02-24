@@ -1,0 +1,89 @@
+== Change Log ==
+
+The changelog summarises changes to the API that will affect downstream client code. It does **not** document new features, for these please refer to the SVN log.
+
+=== rev. 577 ===
+Enabled filters to be passed as function callbacks, depreciating single function
+filters:
+* T_Filter_Lowercase, T_Filter_Trim, T_Filter_Uppercase removed from core.
+
+=== rev. 576 ===
+Removed cloud package, it's job can be done better by external libraries.
+
+=== rev. 572 ===
+A slimming down and pruning release before a move to PHP5.3+:
+* Removed ecom package entirely, it's job is too specific to remain in trunk.
+* Renamed geo package => i18n
+* Renamed aws package => cloud
+* Added support for PostgreSQL
+* Depreciated classes:
+  - T_Permutation
+  - T_Stateless
+  - T_Filter_Capitals
+  - T_Filter_SignificantFig
+  - T_Filter_Suffix (use T_Test_Filter_Suffix for testing)
+  - T_Filter_Titlecase
+  - T_Filter_UppercaseFirst
+
+=== rev. 571 ===
+* Depeciated the "net" package, it's job can be done more powerfully by CURL.
+
+=== rev. 570 ===
+* Removed ability to directly set an array as the data in T_Cage_Cookie::set(), as it opened an unserialize attack vector in the library.
+
+=== rev. 559 ===
+* Removed validation command functionality from form containers
+* T_Form_AddFilterOnAction depreciated and removed
+* abstract T_Form_InputCollection renamed to T_Form_Group
+
+=== rev. 553 ===
+* Class T_Form_XhtmlVisitor depreciated and removed
+* T_Form_XhtmlErrorVisitor renamed to T_Form_XhtmlError
+
+=== rev. 547 ===
+Class T_Cage_Request depreciated [available through T_Environment_Http::input('REQUEST')]. The functionality has been removed directly into the HTTP environment and the methods have been mapped like:
+* T_Cage_Request::getUrl() => T_Environment_Http::getRequestUrl()
+* T_Cage_Request::getHttpMethod() => T_Environment_Http::getMethod()
+* T_Cage_Request::isHttpMethod() => T_Environment_Http::isMethod()
+
+=== rev. 529 ===
+Significant changes to the views package and templating engine.
+* T_Template_File::addIncludeDir() depreciated
+* T_Template_File construct argument must be a full pathname
+* Template helpers defined now as callbacks
+* The @ and __ template syntax is depreciated
+For a full description of the new templating functionality see the [/how-to/templates-and-helpers Template and Helpers HowTo].
+
+=== rev. 479-503 ===
+Significant changes made to the library as dependency injection methodology is introduced along with support for SQLite.
+* library bootstraps from bootstrap.php and works within front controller initialised environments.
+* controller registry removed, and the entire controller acts as a factory
+* controller dispatcher merged into main controller class (T_Controller_Dispatch removed)
+* acl package now uses new db package and DI containers
+* geo package country gateway modified to use new db package.
+
+=== rev. 477 ===
+Forms changed so attributes now set with setAttribute method. T_Form_Text::set/getSize(), T_Form_Text::set/getMaxLength(), T_Form_TextArea::set/getRows(), T_Form_TextArea::set/getCols(), T_Form_Upload::set/getSize() have all been removed.
+
+=== rev. 471 ===
+Modified autoloader framework for the library (see core/_factory.php).
+
+=== rev. 466 ===
+Introduced dependency injection to the framework.
+* T_ErrorHandler class removed.
+* T_ static class is removed. All calls need to be converted to the dependency injection container. e.g. T_::POST() replaced by _as('POST')
+
+=== rev. 458 ===
+T_Form_XhtmlVisitor::setRequiredIcon() argument changed to a string rather than a T_Url object.
+
+=== rev. 457 ===
+* T_Payment_Factory::addDriver => T_Payment_Factory::addProvider
+* T_Payment_AcsForward has been renamed to T_Payment_Forward, and the T_Payment_AcsForward::getAcsUrl() method has been renamed to T_Payment_Forward::getUrl().
+
+=== rev. 437 ===
+T_Src_Php was renamed to T_Xhtml_Php, and converted from a standalone class into a filter.
+
+=== rev. 425 ===
+* T_File_Mime::<constant> has been moved to to T_Mime::<constant>
+* T_File_Mime::OCTETSTREAM renamed to T_Mime::BINARY
+* T_File_Mime::getExtension() renamed to T_File_Mime::getExt()
