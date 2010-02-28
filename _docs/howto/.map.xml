@@ -51,6 +51,13 @@
     </link>
 
     <link>
+        <alias>using-session</alias>
+        <file>session.txt</file>
+        <name>Using Session</name>
+        <desc>Introduces a session handling mechanism that extends the functionality of standard PHP sessions.</desc>
+    </link>
+
+    <link>
         <alias>templates-and-helpers</alias>
         <file>templates.txt</file>
         <name>Templates &amp; View Helpers</name>

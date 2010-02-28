@@ -35,7 +35,7 @@ class T_Auth_Session implements T_Auth_Driver
      *
      * @param string $key  session key
      */
-    function __construct(T_Session_Handler $session,$key='user|auth')
+    function __construct(T_Session_Handler $session,$key='user/auth')
     {
         $this->session = $session;
         $this->key = $key;

@@ -36,14 +36,6 @@ interface T_Session_Driver
     function get();
 
     /**
-     * Attach a driver filter.
-     *
-     * @param T_Filter_Reversable $filter
-     * @return T_Session_Driver  fluent interface
-     */
-    function attachFilter(T_Filter_Reversable $filter);
-
-    /**
      * Regenerates session driver.
      *
      * @return T_Session_Driver  fluent interface

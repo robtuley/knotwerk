@@ -38,17 +38,6 @@ class T_Session_BlackHole implements T_Session_Driver
     }
 
     /**
-     * Discard any filters (no data is saved).
-     *
-     * @param T_Filter_Reversable $filter
-     * @return T_Session_Driver  fluent interface
-     */
-    function attachFilter(T_Filter_Reversable $filter)
-    {
-        return $this;
-    }
-
-    /**
      * No regeneration required.
      *
      * @return T_Session_Driver  fluent interface

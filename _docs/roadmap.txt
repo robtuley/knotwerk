@@ -4,14 +4,9 @@ The immediate to-do list: this is what's coming up!
 
 === Additional Features ===
 
-* extend aws package to support EC2 features, primary aim being an automated volume snapshot script.
 * Make code locale aware, and add support for multiple languages.
-* Added HTTP 1.1 support for remote requests (handle chunked transfer encoding and Keep-Alive requests).
-* Add a currency object for ecom handling.
-* Code generation for simple get/set objects.
-* T_Url as a value object?
-* "net" package removal
-* "aws" package --> "cloud", match simplecloud.org interface?
+* Code generation for simple get/set objects (scaffolding).
+* T_Url as a value object
 
 === Bug Fixes ===
 
@@ -22,7 +17,7 @@ The immediate to-do list: this is what's coming up!
 
 === Docs ===
 
-* Update ACL package readme.
+* Update in-code docs.
 * Form validation tips and tricks (how-to)
 * Forms and Controllers (how-to)
-* Form Repeatable blocks & Addresses
+* Form Repeatable blocks & Addresses docs.

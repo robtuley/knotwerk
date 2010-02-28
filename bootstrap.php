@@ -943,7 +943,7 @@ class T_Session_Handler
     /**
      * Namespace delimiter.
      */
-    const NS_DELIMIT = '|';
+    const NS_DELIMIT = '/';
 
     /**
      * Session drivers.
