@@ -178,7 +178,7 @@ foreach ($classes as $c) {
 
 // attach observers and renderers
 $suite->attach(new T_Unit_TerminalDisplay())
-      ->attach(new T_Unit_XmlLog(T_ROOT_DIR.'.log.xml'));
+      ->attach(new T_Unit_XmlLog(T_CACHE_DIR.'unit.log.xml'));
 /*
 if (T_Unit_CodeCoverage::isAvailable()) {
     $coverage = new T_Unit_CodeCoverage();

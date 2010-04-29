@@ -11,29 +11,24 @@ $f = new T_Filter_Xhtml();
 
 <? $this->partial('in_dev'); ?>
 
-<p>The code library is managed in subversion, and anonymous checkout is
+<p>The code library is managed using git, and anonymous checkout is
    possible from:</p>
 
 <p class="download">
-    <a href="http://svn.knotwerk.com/trunk/">http://svn.knotwerk.com/trunk/</a>
+    <a href="http://knotwerk.com/knotwerk.git">http://knotwerk.com/knotwerk.git</a>
 </p>
 
-<h2>What is 'Subversion'?</h2>
+<h2>What is 'Git'?</h2>
 
-<p>Subversion is a version control tracking system for code. For windows
-   users it is usually easiest to use a graphical tool such as
-   <a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to
-   manage the files directly in Explorer. On other systems there are a
-   variety of command line and GUI tools for managing Subversion repositories.</p>
+<p>Git is a version control tracking system for code. To get the knotwerk
+   library, you will need to 'clone' the current repository:</p>
 
-<p>To get the knotwerk library, you will need to 'checkout' the
-   URL <a href="http://svn.knotwerk.com/trunk/">http://svn.knotwerk.com/trunk/</a>.   This gets you the latest copy of the knotwerk library. As updates are made
-   to the library, you can simply 'update' your existing set of files which
-   will merge any changes to the library with any you have made yourself.</p>
+<p><code>git clone http://knotwerk.com/knotwerk.git</code></p>
 
-<p>Subversion is a powerful tool to track the history of a codebase, and if
-   you are new to it you will find comprehensive document in
-   the <a href="http://svnbook.red-bean.com/">SVN book</a>.</p>
+<p>When you want to get updates that have been made to the main library,
+   'pull' and merge those updates into your local copy:</p>
+
+<p><code>git pull</code></p>
 
 <? $this->placeholder('sidebar')->append(); ?>
 

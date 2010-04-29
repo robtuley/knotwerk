@@ -54,7 +54,7 @@ class Navigation
         $qa = $nav->createByAppendPath('qa','QA');
         $this->populateFromDir(DOC_DIR.'qa/',$qa);
         // test report
-        if (file_exists(T_ROOT_DIR.'.log.xml')) {
+        if (file_exists(T_CACHE_DIR.'unit.log.xml')) {
             $report = $qa->createByAppendPath('report','Unit Test Report');
             $qa->addChild($report,'report');
         }

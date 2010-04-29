@@ -24,7 +24,7 @@ echo $xhtml;
 <div class="box">
 <h2>Want to see the code?</h2>
 <p>If you want to poke around the code itself, you can
-   <a href="<?= $this->url('download'); ?>">use subversion to grab yourself a copy</a>.</p>
+   <a href="<?= $this->url('download'); ?>">use git to grab yourself a copy</a>.</p>
 </div>
 
 <div class="box">

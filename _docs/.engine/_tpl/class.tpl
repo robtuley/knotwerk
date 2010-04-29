@@ -46,7 +46,7 @@ foreach ($this->class->getMethods() as $method) {
    $this->placeholder('features')->capture(); ?>
 
 <p>Prefer reading code to documentation?
-   <a href="<?= $this->url('download'); ?>">Checkout the source from SVN</a>.
+   <a href="<?= $this->url('download'); ?>">Checkout the source using git</a>.
 </p>
 
 <? $this->placeholder('features')->stop(); ?>

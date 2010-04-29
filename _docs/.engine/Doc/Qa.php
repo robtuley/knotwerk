@@ -15,7 +15,7 @@ class Doc_Qa extends Doc_Map
     function getLog()
     {
         if (is_null($this->log)) {
-            $path = T_ROOT_DIR.'.log.xml';
+            $path = T_CACHE_DIR.'unit.log.xml';
             if ($this->log = file_exists($path)) {
                 $this->log = simplexml_load_file($path);
             }
