@@ -1,6 +1,6 @@
 == Accessing User Input ==
 
-User input is normally handled in PHP scripts using the $_GET, $POST, $_COOKIE, etc superglobals. Once the library is bootstrapped, these superglobals remain unaffected and can be manipulated as normal. If you choose to use the library [/how-to/environments code environments], an alternative route to access user input is also available.
+User input is normally handled in PHP scripts using the $_GET, $_POST, $_COOKIE, etc superglobals. Once the library is bootstrapped, these superglobals remain unaffected and can be manipulated as normal. If you choose to use the library [/how-to/environments code environments], an alternative route to access user input is also available.
 
 === GET and POST Variables ===
 
@@ -16,9 +16,9 @@ if (isset($_GET['page'])) $page = (int) $_GET['page'];
 if ($env->input('GET')->exists('page')) {
     try {
         $page = $env->input('GET')
-                        ->asScalar('page')
-                        ->filter(new T_Validate_Int)
-                        ->uncage();
+                    ->asScalar('page')
+                    ->filter(new T_Validate_Int)
+                    ->uncage();
     } catch (Exception $e) { $page = 1; }
 }
 ?>
@@ -31,9 +31,9 @@ $choices = array();  // expect array of integers via POST
 if ($env->input('POST')->exists('choices')) {
     $f = new T_Filter_ArrayMap(new T_Validate_Int);
     $choices = $env->input('POST')
-                       ->asArray('choice')
-                       ->filter($f)
-                       ->uncage();
+                   ->asArray('choice')
+                   ->filter($f)
+                   ->uncage();
 }
 ?>
 
@@ -41,7 +41,34 @@ Note that the filter method can be called multiple times to execute multiple fil
 
 === Cookies ===
 
-TODO
+Cookie data can be **retrieved** in a similar manner to the GET or POST data via the environment input() method, and is uncaged in the same way: the example below shows how you could use a PHP5.3 lambda function to validate your input.
+
+<?php
+$theme = 'default';
+if ($env->input('COOKIE')->exists('theme')) {
+    $fn = function ($th) {
+        if (!/* theme is installed */) $th='default';
+        return $th;
+    };
+    $theme = $env->input('COOKIE')
+                 ->asScalar('theme')
+                 ->filter($fn)
+                 ->uncage();
+}
+?>
+
+To manage the cookies, the Cookie cage has a set() and delete() method.
+
+<?php
+// set a new theme
+$env->input('COOKIE')
+    ->set('theme','newThemeName',time()+30*24*60*60);
+                      // expires in 30 days ^
+// delete new theme
+$env->input('COOKIE')->delete('theme');
+?>
+
+The set method supports the same argument list to the inbuilt setcookie function, but default values for path and domain that are taken from the environment app root URL if it is available.
 
 === Uploaded Files ===
 
