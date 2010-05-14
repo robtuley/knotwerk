@@ -132,10 +132,11 @@ foreach ($add as $f) {
         if (strcmp(T_PHP_EXT,$ext)!==0) continue;
         // exclude hidden dir (start with a .), sample dirs (starts with _),
         // and exclude the Test directory..
+        $ds = DIRECTORY_SEPARATOR;
         if ( $is_dir && (
-                strpos($f,DIRECTORY_SEPARATOR.'.')!==false ||
-                strpos($f,DIRECTORY_SEPARATOR.'_')!==false ||
-                strpos($f,DIRECTORY_SEPARATOR.'Test')!==false
+                strpos($f,$ds.'.')!==false ||
+                strpos($f,$ds.'_')!==false ||
+                strpos($f,$ds.'Test'.$ds)!==false
                         )
            ) continue;
         // now load actual source, and process it.
