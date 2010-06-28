@@ -1,33 +1,14 @@
 <?php
 /**
- * Contains the T_Code_Php class.
- *
- * @package reflection
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
  * Encapsulates a piece of PHP code.
  *
  * @package reflection
+ * @license http://knotwerk.com/licence MIT
  */
 class T_Code_Php
 {
 
-    /**
-     * Cached meta-data about this source.
-     *
-     * @var mixed[]
-     */
     protected $cache = array();
-
-    /**
-     * Source code.
-     *
-     * @var string
-     */
     protected $src;
 
     /**
@@ -63,11 +44,13 @@ class T_Code_Php
 
         // remove starting tag..
         if (strncmp('<?php',$new,5)===0) $new = mb_substr($new,5);
-        if (strncmp('<?',$new,2)===0 && strncmp('<?=',$new,3)!==0) $new = mb_substr($new,2);
+        if (strncmp('<?',$new,2)===0 && strncmp('<?=',$new,3)!==0)
+            $new = mb_substr($new,2);
 
         // remove ending tag
         $end = mb_substr($new,mb_strlen($new)-2);
-        if (strcmp($end,'?>')===0) $new = mb_substr($new,0,mb_strlen($new)-2);
+        if (strcmp($end,'?>')===0)
+            $new = mb_substr($new,0,mb_strlen($new)-2);
 
         return _transform(mb_trim($new),$filter);
     }
@@ -101,32 +84,8 @@ class T_Code_Php
      */
     function getClasses($filter=null)
     {
-        if (!isset($this->cache['class'])) {
-            $this->cache['class'] = array();
-            $tokens = $this->tokenize();
-            reset($tokens);
-            while ($t = current($tokens)) {
-                if (is_array($t) && ($t[0]==T_CLASS || $t[0]==T_INTERFACE)) {
-
-                    next($tokens); // move pass class definition
-
-                    // skip whitespace and comments
-                    while ($t=current($tokens)) {
-                        if (is_array($t) &&
-                            ($t[0]==T_WHITESPACE || $t[0]==T_DOC_COMMENT || $t[0]==T_COMMENT)) {
-                            next($tokens);
-                        } else {
-                            break;
-                        }
-                    }
-
-                    $t = current($tokens);
-                    $this->cache['class'][] = $t[1]; // class name
-                }
-                next($tokens);
-            }
-        }
-        return _transform($this->cache['class'],$filter);
+        $this->doTokenParseJobs();
+        return _transform($this->cache['classes'],$filter);
     }
 
     /**
@@ -216,16 +175,40 @@ class T_Code_Php
      */
     function compress()
     {
+        $this->doTokenParseJobs();
+        return $this->cache['compressed'];
+    }
+
+    /**
+     * Executes any jobs that require code token parsing.
+     *
+     * This code is executed all at one time because caching the tokenised code
+     * array for separate functions to execute at runtime results in a very high
+     * memory usage when exporting entire libraries. It may exchange this for
+     * CPU time in some cases, but generally all these functions are used in
+     * conjunction with each other anyway.
+     */
+    protected function doTokenParseJobs()
+    {
+        if (isset($this->cache['compressed'])) return;
+        $tokens = token_get_all($this->src);
+        $this->cache['compressed'] = $this->doCompress($tokens);
+        $this->cache['classes'] = $this->doClassSearch($tokens);
+
+    }
+
+    protected function doCompress($tokens)
+    {
         // code from PHP manual by gelamu at gmail dot com
         // @see http://php.net/php_strip_whitespace
         $IW = array(T_CONCAT_EQUAL,T_DOUBLE_ARROW,T_BOOLEAN_AND,T_BOOLEAN_OR,
-                    T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_SMALLER_OR_EQUAL,T_IS_GREATER_OR_EQUAL,
-                    T_INC,T_DEC,T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,
-                    T_IS_IDENTICAL,T_IS_NOT_IDENTICAL,T_DOUBLE_COLON,T_PAAMAYIM_NEKUDOTAYIM,
-                    T_OBJECT_OPERATOR,T_DOLLAR_OPEN_CURLY_BRACES,T_AND_EQUAL,T_MOD_EQUAL,
+                    T_IS_EQUAL,T_IS_NOT_EQUAL,T_IS_SMALLER_OR_EQUAL,
+                    T_IS_GREATER_OR_EQUAL,T_INC,T_DEC,T_PLUS_EQUAL,T_MINUS_EQUAL,
+                    T_MUL_EQUAL,T_DIV_EQUAL,T_IS_IDENTICAL,T_IS_NOT_IDENTICAL,
+                    T_DOUBLE_COLON,T_PAAMAYIM_NEKUDOTAYIM,T_OBJECT_OPERATOR,
+                    T_DOLLAR_OPEN_CURLY_BRACES,T_AND_EQUAL,T_MOD_EQUAL,
                     T_XOR_EQUAL,T_OR_EQUAL,T_SL,T_SR,T_SL_EQUAL,T_SR_EQUAL);
-        $tokens = $this->tokenize();
-        $new = "";
+        $new = '';
         $c = count($tokens);
         $iw = false; // ignore whitespace
         $ih = false; // in HEREDOC
@@ -311,20 +294,34 @@ class T_Code_Php
                 $iw = true;
             }
         }
-        return new T_Code_Php($new);
+        return new self($new);
     }
 
-    /**
-     * Gets the tokenized source code.
-     *
-     * @return array  tokens
-     */
-    protected function tokenize()
+    protected function doClassSearch($tokens)
     {
-        if (!isset($this->cache['tokens'])) {
-            $this->cache['tokens'] = token_get_all($this->src);
+        $classes = array();
+        reset($tokens);
+        while ($t = current($tokens)) {
+            if (is_array($t) && ($t[0]==T_CLASS || $t[0]==T_INTERFACE)) {
+                next($tokens); // move pass class definition
+
+                // skip whitespace and comments
+                while ($t=current($tokens)) {
+                    if (is_array($t) &&
+                        ($t[0]==T_WHITESPACE || $t[0]==T_DOC_COMMENT ||
+                         $t[0]==T_COMMENT)) {
+                        next($tokens);
+                    } else {
+                        break;
+                    }
+                }
+
+                $t = current($tokens);
+                $classes[] = $t[1]; // class name
+            }
+            next($tokens);
         }
-        return $this->cache['tokens'];
+        return $classes;
     }
 
 }
