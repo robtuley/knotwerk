@@ -194,7 +194,7 @@ try {
 
 == Database Type Abstraction ==
 
-This lightweight wrapper does not provide any database abstraction, and expects raw SQL arguments. The library itself supports both MySQL and SQLite by virtue of using SQL that is compatible with either, and there are plans to shortly include PostgreSQL support too. In the cases that there is significant advantage in using DB-specific SQL, the DB type can be explicitally sniffed by using the main connection pair is() method.
+This lightweight wrapper does not provide any database abstraction, and expects raw SQL arguments. The library itself supports MySQL, PostgresSQL and SQLite by virtue of using cross-compatible SQL. In the cases that there is significant advantage in using DB-specific SQL, the DB type can be explicitally sniffed by using the main connection pair is() method.
 
 <?php
 if ($db->is(T_Db::MYSQL)) {

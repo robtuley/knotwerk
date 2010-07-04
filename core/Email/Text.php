@@ -1,14 +1,5 @@
 <?php
 /**
- * Defines the class T_Email_Text.
- *
- * @package core
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
  * Text Email.
  *
  * @package core
@@ -17,53 +8,12 @@
 class T_Email_Text
 {
 
-    /**
-     * Email from address.
-     *
-     * @var string
-     */
     protected $from;
-
-    /**
-     * Emails addresses to send to.
-     *
-     * @var array
-     */
     protected $to = array();
-
-    /**
-     * Emails addresses to CC.
-     *
-     * @var array
-     */
     protected $cc = array();
-
-    /**
-     * Emails addresses to BCC.
-     *
-     * @var array
-     */
     protected $bcc = array();
-
-    /**
-     * Email subject.
-     *
-     * @var string
-     */
     protected $subject;
-
-    /**
-     * Body content.
-     *
-     * @var mixed
-     */
     protected $body;
-
-    /**
-     * Driver to send email.
-     *
-     * @var T_Email_Driver
-     */
     protected $driver = null;
 
     /**
@@ -126,15 +76,8 @@ class T_Email_Text
      */
     function send()
     {
-        // normalise body to string
-        if (is_object($this->body)) {
-            $body = $this->body->__toString();
-        } else {
-            $body = (string) $this->body;
-        }
-        // use driver to send mail
         $this->driver->send($this->from,$this->to,$this->cc,
-                            $this->bcc,$this->subject,$body);
+                            $this->bcc,$this->subject,(string) $this->body);
         return $this;
     }
 

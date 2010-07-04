@@ -1,19 +1,5 @@
 <?php
-/**
- * Defines the T_Test_Email_DriverStub class.
- *
- * @package core
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
- * Testing emailing driver stub.
- *
- * @package core
- */
-class T_Test_Email_DriverStub implements T_Email_Driver,T_Test_Stub
+class T_Test_Email_Driver_Stub implements T_Email_Driver,T_Test_Stub
 {
 
     /**

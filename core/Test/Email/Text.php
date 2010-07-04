@@ -1,34 +1,11 @@
 <?php
-/**
- * Unit test cases for the T_Email_Text class.
- *
- * @package coreTests
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
- * T_Email_Text test cases.
- *
- * @package coreTests
- */
 class T_Test_Email_Text extends T_Unit_Case
 {
 
-    /**
-     * Email driver.
-     *
-     * @var T_Test_Email_DriverStub
-     */
     protected $driver;
-
-    /**
-     * Set test email driver.
-     */
     function setUp()
     {
-        $this->driver = new T_Test_Email_DriverStub();
+        $this->driver = new T_Test_Email_Driver_Stub;
     }
 
     function testFromAddressSetInConstructor()

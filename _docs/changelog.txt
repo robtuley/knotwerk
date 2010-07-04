@@ -2,10 +2,8 @@
 
 The changelog summarises changes that affect code that uses this library. It does **not** document new features, for these please refer to the git log.
 
+=== 04-July-2010 ===
+Class T_Email_NativeDriver renamed to T_Email_Driver_Native.
+
 === 25-April-2010 ===
 Converted library to develop in git. History has been cauterised and only changesets from SVN r577+ have been imported.
-
-=== rev. 08775a85e767... ===
-Enabled filters to be passed as function callbacks, depreciating single function
-filters:
-* T_Filter_Lowercase, T_Filter_Trim, T_Filter_Uppercase removed from core.

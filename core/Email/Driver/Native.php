@@ -1,19 +1,11 @@
 <?php
 /**
- * Defines the T_Email_NativeDriver class.
- *
- * @package core
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
  * Email sending driver using inbuilt PHP mail functions.
  *
  * @package core
+ * @license http://knotwerk.com/licence MIT
  */
-class T_Email_NativeDriver implements T_Email_Driver
+class T_Email_Driver_Native implements T_Email_Driver
 {
 
     /**
@@ -29,7 +21,8 @@ class T_Email_NativeDriver implements T_Email_Driver
     function send($from,array $to,array $cc,array $bcc,$subject,$body)
     {
         $primary = array_shift($to);
-        /* create mail headers */
+
+        // create headers
         $headers[] = "From: $from";
         $headers[] = "Reply-To: $from";
         if (count($to)>0) $headers[] = 'To: '.implode(',',$to);
@@ -37,21 +30,20 @@ class T_Email_NativeDriver implements T_Email_Driver
         if (count($bcc)>0) $headers[] = 'Bcc: '.implode(',',$bcc);
         $headers[] = 'X-Mailer: PHP/'.phpversion();
         $header_str = implode("\r\n",$headers);
-        /* check no newline characters in subject */
-        if (strpos($subject,"\n")!==false) {
-            throw new T_Exception_Email('newline characters not permitted in subject');
-        }
-        /* prepare body (normalise newlines and wrap) */
+        if (strpos($subject,"\n")!==false)
+            throw new LogicException('LF detected in subject');
+
+        // prepare body (normalise newlines and wrap)
         $eol = '/(?:\r\n|\n|\x0b|\f|\x85)/';
-        	/* Matches newline characters: LF, CR, CRLF and unicode linebreaks.
-               We can't use the more efficient '\R' here as it is only supported
-               by PCRE 7.0+  */
+            // We can't use the more efficient '\R' here as
+            // it is only supported by PCRE 7.0+
         $body = preg_replace($eol,EOL,$body);
         $body = wordwrap($body,70);
-        /* send email */
+
+        // send email
         $ok = $this->doSend($primary,$subject,$body,$header_str);
         if ($ok===false) {
-            throw new T_Exception_Email('email not sent to '.$primary);
+            throw new T_Exception_Email("Email to $primary failed");
         }
     }
 
