@@ -1,134 +1,42 @@
 <?php
 /**
- * Defines the T_Auth_IpHammer class.
- *
- * @package ACL
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
  * IP address hammer attack lock observer.
  *
- * This observer locks all attempted logins from a particular IP address after a threshold of
- * of consecutive failed login attempts is reached.
+ * This observer locks all attempted logins from a particular IP address
+ * after a threshold of consecutive failed login attempts is reached.
  *
- * @package ACL
+ * 
  */
 class T_Auth_IpHammer implements T_Auth_Observer
 {
 
-    /**
-     * Consecutive failures permitted before lock.
-     *
-     * @var int
-     */
     protected $threshold;
-
-    /**
-     * Lock duration (seconds).
-     *
-     * @var int
-     */
     protected $duration;
+    protected $db;
+    protected $ip = false;  // as integer from ip2long
 
     /**
      * Create IP hammer lock protection.
      *
+     * @param T_Db $db
+     * @param T_Environment $env
      * @param int $threshold  consecutive login failures before lock applied
      * @param int $lock_duration  length of a lockdown in seconds
      */
-    function __construct($threshold=15,$lock_duration=3600)
+    function __construct(T_Db $db,T_Environment $env,
+                         $threshold=15,$lock_duration=3600)
     {
+        $this->db = $db;
         $this->threshold = $threshold;
         $this->duration = $lock_duration;
-    }
 
-	/**
-     * Get connection object
-     *
-     * @return T_Mysql_Conn
-     */
-    protected function getConnection()
-    {
-        return T_Mysql_Factory::getInstance('user');
-    }
-
-    /**
-     * Get IP address.
-     *
-     * @return string  IP
-     */
-    protected function getIp()
-    {
-        if (_as('SERVER')->exists('REMOTE_ADDR')) {
-            return _as('SERVER')->asScalar('REMOTE_ADDR')->uncage();
-        } else {
-            return false;
+        // parse out IP address.
+        $s = $env->input('SERVER');
+        if ($s && $s->exists('REMOTE_ADDR')) {
+            $this->ip = $s->asScalar('REMOTE_ADDR')
+                          ->filter('ip2long')
+                          ->uncage();
         }
-    }
-
-    /**
-     * Get the expiry of any IP lock.
-     *
-     * @param string $ip  IP address
-     * @param false|int  false or unix time of lock expiry
-     */
-    protected function getLockExpiry($ip)
-    {
-        $db = $this->getConnection()->master();
-        $ip_sql = 'INET_ATON('.$db->to_sql_literal($ip).')';
-
-        // retrieve the number of previous consecutive failed logins
-        $sql = "SELECT fail_count,UNIX_TIMESTAMP(expiry) unix_expiry ".
-               "FROM person_hammer_lock WHERE ip=$ip_sql";
-        $result = $db->query($sql);
-
-        // if there is a row, retrieve data
-        $row = false;
-        if ($result->num_rows==1) $row = $result->fetch_object();
-
-        // clear any expired locks
-        $sql = 'DELETE FROM person_hammer_lock WHERE expiry < NOW()';
-        if ($row && strlen($row->unix_expiry) && $row->unix_expiry<time()) { // expired lock
-            $db->query($sql);
-            $row=false;
-        } elseif (mt_rand(1,50)==25) { // periodically cleanse on 2% probability
-            $db->query($sql);
-        }
-
-        // work out if lock is already set, and return if it is
-        if ($row && strlen($row->unix_expiry)) {
-            return $row->unix_expiry;
-        }
-
-        // if no lock already, but row is present, check against threshold to see if need to
-        // apply a lock...
-        if ($row && $row->fail_count>$this->threshold) {
-            $expiry = time()+$this->duration;
-            $sql = "UPDATE person_hammer_lock SET expiry=FROM_UNIXTIME($expiry) WHERE ip=$ip_sql";
-            $db->query($sql);
-            return $expiry;
-        }
-
-        // ... else no row, or a row which is not already locked and threshold is under limit.
-        return false;
-    }
-
-    /**
-     * Creates the lock error.
-     *
-     * @param int $expiry
-     * @throws T_Exception_Auth
-     */
-    protected function throwError($expiry)
-    {
-        $f = new T_Filter_HumanTimePeriod();
-        $time = $f->transform($expiry-time());
-        $msg = "Due to unusual activity, your account has been temporarily disabled for the next $time. ".
-               'Please wait and try again later, or contact your system administrator.';
-        throw new T_Exception_Auth($msg);
     }
 
     /**
@@ -139,22 +47,24 @@ class T_Auth_IpHammer implements T_Auth_Observer
      */
     function pass(T_Auth $auth)
     {
-        $ip = $this->getIp();
-        if (!$ip) {
-            return $this; // only action if IP available
+        if (false===$this->ip) return $this; // only action if IP available
+
+        // * if account is *already* locked, throw error
+        // * if not locked, then reset number of consecutive failed logins
+        $db = $this->db->master();
+        $db->begin();
+        $row = $this->getExistingRow();
+        if (false!==$row) {
+            if (strlen($row['expiry'])) {
+                $db->commit();
+                throw $this->getError($row['expiry']);
+            } else {
+                $sql = 'DELETE FROM person_hammer_lock WHERE ip=?';
+                $db->query($sql,array($this->ip));
+            }
         }
-        // Check if account is *already* locked, and if so, throw an error. If not
-        // already locked, then the login can continue and the number of consecutive
-        // failed logins by this IP should be reset.
-        $expiry = $this->getLockExpiry($ip);
-        if ($expiry!==false) {
-            $this->throwError($expiry);
-        } else {
-            $db = $this->getConnection()->master();
-            $ip_sql = 'INET_ATON('.$db->to_sql_literal($ip).')';
-            $sql = 'DELETE FROM person_hammer_lock WHERE ip='.$ip_sql;
-            $db->query($sql);
-        }
+        $db->commit();
+        $this->gc();
         return $this;
     }
 
@@ -166,21 +76,92 @@ class T_Auth_IpHammer implements T_Auth_Observer
      */
     function fail(T_Auth $auth)
     {
-        $ip = $this->getIp();
-        if (!$ip) {
-            return $this; // only action if IP available
-        }
-        // Check if account is *already* locked, and if so, throw an error. If not
-        // already locked, then the failed login should be noted.
-        $expiry = $this->getLockExpiry($ip);
-        if ($expiry!==false) {
-            $this->throwError($expiry);
+        if (false===$this->ip) return $this; // only action if IP available
+
+        $db = $this->db->master();
+        $db->begin();
+        $row = $this->getExistingRow();
+        if (false===$row) {
+            // insert row
+            $sql = 'INSERT INTO person_hammer_lock (ip,fail_count) '.
+                   'VALUES (?,1)';
+            $db->query($sql,array($this->ip));
+        } elseif (strlen($row['expiry'])) {
+            // account already locked, throw error
+            $db->commit();
+            throw $this->getError($row['expiry']);
+        } elseif (($this->threshold-$row['fail_count'])<=1) {
+            // lock account, reached or gone over threshold
+            $expiry = time()+$this->duration;
+            $sql = "UPDATE person_hammer_lock SET expiry=? WHERE ip=?";
+            $db->query($sql,array($expiry,$this->ip));
+            $db->commit();
+            throw $this->getError($expiry);
         } else {
-            $db = $this->getConnection()->master();
-            $ip_sql = 'INET_ATON('.$db->to_sql_literal($ip).')';
-            $sql = "INSERT INTO person_hammer_lock (ip,fail_count,expiry) VALUES ($ip_sql,1,NULL) ".
-                   "ON DUPLICATE KEY UPDATE fail_count=fail_count+1";
-            $db->query($sql);
+            // existing row, under threshold so simply update.
+            $sql = 'UPDATE person_hammer_lock SET fail_count=fail_count+1 '.
+                   'WHERE ip=?';
+            $db->query($sql,array($this->ip));
+        }
+        $db->commit();
+        $this->gc();
+        return $this;
+    }
+
+    // NB: assumes sitting in a transaction
+    protected function getExistingRow()
+    {
+        $db = $this->db->master();
+
+        // retrieve the number of previous consecutive failed logins
+        $sql = 'SELECT fail_count,expiry '.
+               'FROM person_hammer_lock WHERE ip=?';
+        if (!$this->db->is(T_Db::SQLITE)) $sql .= ' FOR UPDATE';
+         // ^ row-lock if available to prevent race conditions
+        $result = $db->query($sql,array($this->ip));
+
+        // if there is a row, retrieve data
+        $row = false;
+        if (count($result)>0) $row = $result->fetch();
+
+        // clear row if has expired
+        if (false!==$row && strlen($row['expiry']) && $row['expiry']<time()) {
+            // expired lock
+            $sql = 'DELETE FROM person_hammer_lock '.
+                   'WHERE ip=?';
+            $db->query($sql,array($this->ip));
+            $row=false;
+        }
+
+        return $row;
+    }
+
+    protected function getError($expiry)
+    {
+        $f = new T_Filter_HumanTimePeriod;
+        $time = $f->transform($expiry-time());
+        $msg = 'Due to unusual activity, your account has been temporarily '.
+               "disabled for the next $time. ".
+               'Please wait and try again later, or contact your system '.
+               'administrator.';
+        return new T_Exception_Auth($msg);
+    }
+
+    /**
+     * The general garbage collection mechanism is called separately from the
+     * main DB transaction to prevent transaction deadlock (potentially 2 calls
+     * to delete an expired row that is already locked for viewing by another
+     * thread).
+     *
+     * This GC clears any old locks for accounts that haven't been retried and
+     * deletes them on a 1% probablility basis.
+     */
+    protected function gc()
+    {
+        if (mt_rand(1,100)==25) { // 1% chance
+            $sql = 'DELETE FROM person_hammer_lock '.
+                   'WHERE expiry<?';
+            $this->db->master()->query($sql,array(time()));
         }
     }
 
