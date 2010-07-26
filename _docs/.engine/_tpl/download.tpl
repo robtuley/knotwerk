@@ -15,7 +15,7 @@ $f = new T_Filter_Xhtml();
    possible from:</p>
 
 <p class="download">
-    <a href="http://knotwerk.com/knotwerk.git">http://knotwerk.com/knotwerk.git</a>
+    <a href="git://openknot.com/knotwerk.git">git://openknot.com/knotwerk.git</a>
 </p>
 
 <h2>What is 'Git'?</h2>
@@ -23,7 +23,7 @@ $f = new T_Filter_Xhtml();
 <p>Git is a version control tracking system for code. To get the knotwerk
    library, you will need to 'clone' the current repository:</p>
 
-<p><code>git clone http://knotwerk.com/knotwerk.git</code></p>
+<p><code>git clone git://openknot.com/knotwerk.git</code></p>
 
 <p>When you want to get updates that have been made to the main library,
    'pull' and merge those updates into your local copy:</p>

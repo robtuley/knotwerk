@@ -7,6 +7,11 @@ The immediate to-do list: this is what's coming up!
 * Make code locale aware, and add support for multiple languages.
 * Code generation for simple get/set objects (scaffolding).
 * T_Url as a value object
+* Form Get-handler deprecate
+* Controller methods tidy: handle/map/etc
+* form isReady() method (isPresent && isValid)
+* couchdb support (new package?)
+* finish client package and document
 
 === Bug Fixes ===
 
