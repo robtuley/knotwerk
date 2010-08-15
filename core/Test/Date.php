@@ -1,18 +1,4 @@
 <?php
-/**
- * Unit test cases for the T_Date class.
- *
- * @package coreTests
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
- * T_Date unit test cases.
- *
- * @package coreTests
- */
 class T_Test_Date extends T_Unit_Case
 {
 
@@ -161,6 +147,17 @@ class T_Test_Date extends T_Unit_Case
         $date = new T_Date(5,2,1910);
         $f = new T_Test_Filter_Suffix();
         $this->assertSame($date->asFormat('d-m-Y',$f),$f->transform('05-02-1910'));
+    }
+
+    // decoratorable
+
+    function testIsDecoratable()
+    {
+        $date = new T_Date(5,2,1910);
+        $this->assertTrue($date instanceof T_Decorated);
+        $this->assertSame($date->getClass(),get_class($date));
+        $this->assertTrue($date->isA(get_class($date)));
+        $this->assertFalse($date->isA('T_Filter'));
     }
 
 }

@@ -1,63 +1,82 @@
 <?php
 /**
- * Defines the T_Decorator class.
+ * A decorator.
  *
- * @package core
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
- * A decorator object.
- *
- * This provides an skeleton decorator implementation. A decorator is simply an
- * "transparent" object that can be called around a core class to add
- * functionality to an object.
+ * Provides an skeleton decorator implementation. A decorator is simply a
+ * "transparent" object that is wrapped around a core object to add additional
+ * functionality.
  *
  * <?php
- * $gateway = new T_Decorator(new T_Geo_CountryGateway());
- * // can use $gateway just like you would use a country gateway, but the
- * // decorator can 'add' or override function calls.
+ * $date = new T_Decorator(new T_Date(17,2,1980));
+ * // can use $date just like you would use a normal date object, but the
+ * // decorator can add or override function calls.
+ * ?>
+ *
+ * There are two actions that decorators make difficult that need to be addressed
+ * by extra class methods (defined in the T_Decorated interface). Firstly, if
+ * you have a decoratored object, you need to be able to query whether it is of a
+ * certain type (instanceof). This should include the base target object and its
+ * decorators.
+ *
+ * <?php
+ * $date = new T_Decorator(new T_Date(17,2,1980));
+ * if ($date->isA('T_Date')) {
+ *     // do something
+ * }
+ * ?>
+ *
+ * To aid the process when code is unsure whether an object is T_Decorated an
+ * _isA($obj,$name) global helper method is defined.
+ *
+ * The other task that becomes difficult with decorated objects is to get the
+ * classname of the base object; useful for dependency injection containers etc.
+ * for this, use the getClass method to get the classname of the base target
+ * object.
+ *
+ * <?php
+ * $date = new T_Decorator(new T_Date(17,2,1980));
+ * echo $date->getClass(); // T_Date
  * ?>
  *
  * @package core
  */
-class T_Decorator implements T_Transparent
+class T_Decorator implements T_Decorated
 {
 
-    /**
-     * Decorator target.
-     *
-     * @var object
-     */
     protected $target;
 
     /**
      * Create decorator with a target.
      *
-     * @param object $target
+     * @param T_Decorated $target
      */
-    function __construct($target)
+    function __construct(T_Decorated $target)
     {
         $this->target = $target;
     }
 
     /**
-     * Returns the target object underneath.
+     * Get the classname of the decorated object.
      *
-     * @return object
+     * @return string  classname
      */
-    function lookUnder()
+    function getClass()
     {
-        if ($this->target instanceof T_Transparent) {
-            return $this->target->lookUnder();
-        }
-        return $this->target;
+        return $this->target->getClass();
     }
 
     /**
-     * Pass any unhandled calls through to the decoarted target.
+     * Whether the object is of a particular type.
+     *
+     * @return bool
+     */
+    function isA($name)
+    {
+        return ($this instanceof $name) || $this->target->isA($name);
+    }
+
+    /**
+     * Pass any unhandled calls through to the decorated target.
      *
      * @param string $method
      * @param array $args

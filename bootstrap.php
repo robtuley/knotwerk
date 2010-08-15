@@ -198,10 +198,10 @@ class T_Factory_Di implements T_Factory
             //  2. parent class names
             //  3. interface names
             if (is_object($class)) {
-                if ($class instanceof T_Transparent) {
+                if ($class instanceof T_Decorated) {
                     // in this case, the object is decorated, and we need to
                     // look *under* the decorators to get to the base class.
-                    $classname = get_class($class->lookUnder());
+                    $classname = $class->getClass();
                 } else {
                     $classname = get_class($class);
                 }

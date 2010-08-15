@@ -1,31 +1,16 @@
 <?php
-/**
- * Unit test cases for the dependency injection factory.
- *
- * @package coreTests
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
- * Dependency Injection Example Classes.
- */
-
 interface T_Example_DI_A_Interface { }
 class T_Example_DI_A implements T_Example_DI_A_Interface { }
-class T_Example_DI_A_Child extends T_Example_DI_A { }
+class T_Example_DI_A_Child extends T_Example_DI_A implements T_Decorated
+{
+    function isA($class) { return $this instanceof $class; }
+    function getClass() { return get_class($this); }
+}
 class T_Example_DI_B
 {
     function __construct(T_Example_DI_A $a) { $this->a = $a; }
 }
 
-/**
- * Dependency injection test cases.
- *
- * @package coreTests
- * @license http://knotwerk.com/licence MIT
- */
 class T_Test_Factory_Di extends T_Unit_Case
 {
 
@@ -115,7 +100,7 @@ class T_Test_Factory_Di extends T_Unit_Case
     function testSettingToUseDecoratedObjectTreatsDecoratorAsTransparent()
     {
         $di = $this->getContainer();
-        $decorated = new T_Decorator(new T_Example_DI_A_Child());
+        $decorated = new T_Decorator(new T_Example_DI_A_Child);
         $di->willUse($decorated);
         $this->assertSame($di->like('T_Example_DI_A_Child'),$decorated);
         $this->assertSame($di->like('T_Example_DI_A'),$decorated);
