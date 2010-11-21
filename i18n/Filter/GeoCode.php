@@ -1,6 +1,6 @@
 <?php
 /**
- * Defines the T_Filter_Geocode interface.
+ * Defines the T_Filter_GeoCode interface.
  *
  * @package geo
  * @author Rob Tuley
@@ -13,7 +13,7 @@
  *
  * @package geo
  */
-interface T_Filter_Geocode extends T_Filter
+interface T_Filter_GeoCode extends T_Filter
 {
     
     /**
