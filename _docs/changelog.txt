@@ -1,9 +1,0 @@
-== Change Log ==
-
-The changelog summarises changes that affect code that uses this library. It does **not** document new features, for these please refer to the git log.
-
-=== 04-July-2010 ===
-Class T_Email_NativeDriver renamed to T_Email_Driver_Native.
-
-=== 25-April-2010 ===
-Converted library to develop in git. History has been cauterised and only changesets from SVN r577+ have been imported.
