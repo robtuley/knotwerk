@@ -2,6 +2,11 @@
 class T_Test_Code_Files extends T_Unit_Case
 {
 
+    function setUp()
+    {
+        if (!is_dir(T_CACHE_DIR)) mkdir(T_CACHE_DIR);
+    }
+
     function testExceptionThrownIfOneOfFilesDoNotExist()
     {
         try {
