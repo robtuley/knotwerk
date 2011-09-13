@@ -1,14 +1,5 @@
 <?php
 /**
- * Defines the T_Google_Geocode class.
- *
- * @package geo
- * @author Rob Tuley
- * @version SVN: $Id$
- * @license http://knotwerk.com/licence MIT
- */
-
-/**
  * Uses the Google Maps API to geocode a point.
  *
  * @package geo
@@ -16,13 +7,6 @@
  */
 class T_Google_GeoCode extends T_Filter_Skeleton implements T_Filter_GeoCode
 {
-
-    /**
-     * Your google maps key.
-     *
-     * @var string
-     */
-    protected $key;
 
     /**
      * Whether you are using a GPS sensor.
@@ -45,10 +29,9 @@ class T_Google_GeoCode extends T_Filter_Skeleton implements T_Filter_GeoCode
      * @param bool $sensor  whether you are using a sensor (e.g. GPS) to fix user position
      * @param T_Filter $prior  prior filter
      */
-    function __construct($key,$sensor=false,$prior=null)
+    function __construct($sensor=false,$prior=null)
     {
         parent::__construct($prior);
-        $this->key = $key;
         $this->sensor = (bool) $sensor;
     }
 
@@ -78,12 +61,9 @@ class T_Google_GeoCode extends T_Filter_Skeleton implements T_Filter_GeoCode
     protected function doTransform($value)
     {
         // build url
-        $url = 'http://maps.google.com/maps/geo?q='.urlencode($value).
-                    '&output=csv'.
-                    '&key='.urlencode($this->key).
-                    '&oe=utf8'.
+        $url = 'http://maps.googleapis.com/maps/api/geocode/json?address='.urlencode($value).
                     '&sensor='.($this->sensor ? 'true' : 'false');
-        if ($this->cc_tld!==false) $url .= '&gl='.urlencode($this->cc_tld);
+        if ($this->cc_tld!==false) $url .= '&region='.urlencode($this->cc_tld);
 
         // make request
         // (set up a CURL request, telling it not to spit back headers)
@@ -93,16 +73,21 @@ class T_Google_GeoCode extends T_Filter_Skeleton implements T_Filter_GeoCode
         curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
         $data = curl_exec($ch);
+        $code = curl_getinfo($ch,CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         // process data
-        // (response_code,accuracy,longitude,latitude)
-        if (substr($data,0,3)==='200') {
-            $data = explode(',',$data);
-            $point = new T_Geo_Point($data[3],$data[2]);
-        } else {
-            throw new T_Exception_Filter("Failed to geocode $value with response $data");
+        $point = false;
+        if ($code==200) {
+            $data = json_decode($data,true);
+            if ($data['status']=='OK') {
+                $geo = reset($data['results']);
+                $geo = $geo['geometry']['location'];
+                $point = new T_Geo_Point($geo['lng'],$geo['lat']);
+            }
         }
+        if (!$point)
+            throw new T_Exception_Filter("Failed to geocode $value");
         return $point;
     }
 

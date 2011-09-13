@@ -1,28 +1,23 @@
 <?php
 class T_Test_Google_GeoCode extends T_Unit_Case
 {
-    protected $key;
 
-    function setUpSuite()
+    function setUp()
     {
-        $this->key = $this->getFactory()->getGoogleMapKey();
-    }
-
-    function requiresKey()
-    {
-        if (!$this->key) $this->skip('Requires a Google Maps API key');
+        if (!$this->getFactory()->isNetwork()) {
+            $this->skip('Network must be enabled in config to test Google geocode');
+        }
     }
  
     function testBiasByCountryCodeHasAFluentInterface()
     {
-        $filter = new T_Google_GeoCode('key');
+        $filter = new T_Google_GeoCode;
         $this->assertSame($filter,$filter->biasToCountry('GB'));
     }
     
     function testCanGeocodeATownWithoutCountryBiasAndNoSensor()
     {
-        $this->requiresKey();
-        $filter = new T_Google_GeoCode($this->key);
+        $filter = new T_Google_GeoCode;
         $point = $filter->transform('1600 amphitheatre mountain view ca');
         $this->assertTrue($point instanceof T_Geo_Point);
         $this->assertSimilarFloat(-122.0841430,$point->getLongitude(),0.5);
@@ -31,8 +26,7 @@ class T_Test_Google_GeoCode extends T_Unit_Case
     
     function testGeoCodingFailureResultsInException()
     {
-        $this->requiresKey();
-        $filter = new T_Google_GeoCode($this->key);
+        $filter = new T_Google_GeoCode;
         try {
             $filter->transform(''); // expect 601 = G_GEO_MISSING_QUERY response
             $this->fail();
@@ -43,8 +37,7 @@ class T_Test_Google_GeoCode extends T_Unit_Case
     
     function testCanBiasGeocodedResultsToACountry()
     {
-        $this->requiresKey();
-        $filter = new T_Google_GeoCode($this->key,true);
+        $filter = new T_Google_GeoCode(true);
         
         // defaults to Toledo, OH, USA
         $point = $filter->transform('Toledo');
