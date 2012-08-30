@@ -105,28 +105,6 @@ class T_Test_Controller_Request extends T_Unit_Case
         $this->assertSame($root,array());
     }
 
-    function testSubRootPathParsedUnderXssAttack()
-    {
-        $env = $this->getDefaultEnvironment(array(
-                        'PHP_SELF'=>'/app/root/index'.T_PHP_EXT.'/xss',
-                        'REQUEST_URI'=>'/app/root/',
-                        )  );
-        $request = $this->getRequest($env);
-        $root = $request->getUrl()->getPath();
-        $this->assertSame($root,array('app','root'));
-    }
-
-    function testRootPathParseFailure()
-    {
-        $env = $this->getDefaultEnvironment(array(
-                        'PHP_SELF'=>'/no/front/controller',
-                        )  );
-        try {
-            $request = $this->getRequest($env);
-            $this->fail('no exception on root parse failure');
-        } catch (T_Exception_Controller $expected) { }
-    }
-
     function testRequestWithNoRootPathAndNoSubspace()
     {
         $env = $this->getDefaultEnvironment(array(

@@ -70,18 +70,13 @@ class T_Controller_Request implements T_Controller_Context
         $root = $this->input('SERVER')->asScalar('PHP_SELF')
                                       ->filter(new T_Filter_UrlPath())
                                       ->uncage();
-          // under-attack ==> $root = 'some','path','index.php','xss'
         $key = array_search('index'.T_PHP_EXT,$root);
         if ($key===false) {
-            $msg = 'Front controller filename not found: '.serialize($root);
-            throw new T_Exception_Controller($msg);
+            $root = array();
+        } else {
+            $root = array_slice($root,0,$key);
         }
-        // first match only is returned, so this must be our controller not a
-        // user spoofed dummy string later in the path. Get section of array
-        // prior to the controller filename only (array is numerically indexed,
-        // so length = $key gives correct slice.
-        $root = array_slice($root,0,$key);
-
+        
         /**
          * Get the request URI bits.
          */
